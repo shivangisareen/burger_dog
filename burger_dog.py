@@ -1,5 +1,6 @@
-from ast import Or
+from dis import dis
 import pygame
+import random
 
 pygame.init()
 
@@ -21,6 +22,7 @@ STARTING_BOOST_LEVEL = 100
 
 STARTING_BURGER_VELOCITY = 3
 BURGER_ACCELERATION = 0.25
+BUFFER_DISTANCE = 100
 
 score = 0
 burger_points = 0
@@ -84,8 +86,17 @@ miss_sound = pygame.mixer.Sound("./burger_dog/assets/miss_sound.wav")
 pygame.mixer.music.load("./burger_dog/assets/bd_background_music.wav")
 
 # Set images
+player_image_right = pygame.image.load("./burger_dog/assets/dog_right.png")
+player_image_left = pygame.image.load("./burger_dog/assets/dog_left.png")
 
+player_image = player_image_right
+player_rect = player_image.get_rect()
+player_rect.centerx = WINDOW_WIDTH//2
+player_rect.bottom = WINDOW_HEIGHT
 
+burger_image = pygame.image.load("./burger_dog/assets/burger.png")
+burger_rect = burger_image.get_rect()
+burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
 
 
 # main game loop
@@ -107,8 +118,12 @@ while running:
     display_surface.blit(burgers_eaten_text, burgers_eaten_rect)
     display_surface.blit(lives_text, lives_rect)
     display_surface.blit(boost_text, boost_rect)
+    display_surface.blit(player_image, player_rect)
+
+    pygame.draw.line(display_surface, WHITE, (0,100), (WINDOW_WIDTH,100), 2)
 
     pygame.display.update()
+    clock.tick(FPS)
 
 
 
