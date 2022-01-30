@@ -1,0 +1,115 @@
+from ast import Or
+import pygame
+
+pygame.init()
+
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+pygame.display.set_caption("Burger Dog!")
+
+
+# Set FPS and clock 
+FPS = 60
+clock = pygame.time.Clock()
+
+# Set game values 
+PLAYER_STARTING_LIVES = 3
+PLAYER_NORMAL_VELOCITY = 5
+PLAYER_BOOST_VELOCITY = 10
+STARTING_BOOST_LEVEL = 100
+
+STARTING_BURGER_VELOCITY = 3
+BURGER_ACCELERATION = 0.25
+
+score = 0
+burger_points = 0
+burgers_eaten = 0
+
+player_lives = PLAYER_STARTING_LIVES
+player_velocity = PLAYER_NORMAL_VELOCITY
+
+boost_level = STARTING_BOOST_LEVEL
+
+burger_velocity = STARTING_BURGER_VELOCITY
+
+
+# Set colours 
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+ORANGE=(246,170,54)
+RED = (255,0,0)
+PURPLE = (150,0,250)
+
+# Set fonts 
+font = pygame.font.Font("./burger_dog/assets/WashYourHand.ttf", 32)
+
+# Set text 
+points_text = font.render("Burger Points: " + str(burger_points), True, ORANGE)
+points_rect = points_text.get_rect()
+points_rect.topleft = (10,10)
+
+score_text = font.render("Score: " + str(score), True, ORANGE)
+score_rect = score_text.get_rect()
+score_rect.topleft = (10,50)
+
+title_text = font.render("BURGER DOG", True, RED)
+title_rect = title_text.get_rect()
+title_rect.center = (WINDOW_WIDTH//2, 30)
+
+burgers_eaten_text = font.render("Burgers Eaten: " + str(burgers_eaten), True, ORANGE)
+burgers_eaten_rect = burgers_eaten_text.get_rect()
+burgers_eaten_rect.center = (WINDOW_WIDTH//2, 70)
+
+lives_text = font.render("Lives: " + str(player_lives), True, ORANGE)
+lives_rect = lives_text.get_rect()
+lives_rect.topright = (WINDOW_WIDTH - 10, 10)
+
+boost_text = font.render("Boost: "+str(boost_level), True, PURPLE)
+boost_rect = boost_text.get_rect()
+boost_rect.topright = (WINDOW_WIDTH - 10, 50)
+
+game_over_text = font.render("Final Score: "+str(score), True, ORANGE)
+game_over_rect = game_over_text.get_rect()
+game_over_rect.center = (WINDOW_WIDTH//2, WINDOW_HEIGHT//2)
+
+continue_text = font.render("Press any key to play again", True, ORANGE)
+continue_rect = continue_text.get_rect()
+continue_rect.center = (WINDOW_WIDTH//2, WINDOW_HEIGHT//2 + 64)
+
+# Set sounds and music 
+bark_sound = pygame.mixer.Sound("./burger_dog/assets/bark_sound.wav")
+miss_sound = pygame.mixer.Sound("./burger_dog/assets/miss_sound.wav")
+
+pygame.mixer.music.load("./burger_dog/assets/bd_background_music.wav")
+
+# Set images
+
+
+
+
+# main game loop
+running = True
+while running:
+    # see if user wants to quit
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    
+    # fill the display
+    display_surface.fill(BLACK)
+
+    # blit the HUD
+    display_surface.blit(points_text, points_rect)
+    display_surface.blit(score_text, score_rect)
+    display_surface.blit(title_text, title_rect)
+    display_surface.blit(burgers_eaten_text, burgers_eaten_rect)
+    display_surface.blit(lives_text, lives_rect)
+    display_surface.blit(boost_text, boost_rect)
+
+    pygame.display.update()
+
+
+
+pygame.quit()
