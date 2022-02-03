@@ -1,4 +1,5 @@
 from dis import dis
+from pdb import run
 import pygame
 import random
 
@@ -21,9 +22,8 @@ PLAYER_BOOST_VELOCITY = 10
 STARTING_BOOST_LEVEL = 100
 
 STARTING_BURGER_VELOCITY = 3
-BURGER_ACCELERATION = 0.25
+BURGER_ACCELERATION = 0.5
 BUFFER_DISTANCE = 100
-STARTING_BURGER_POSITION = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
 
 score = 0
 burger_points = 0
@@ -101,7 +101,7 @@ burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
 
 
 # main game loop
-pygame.mixer.music.play()
+pygame.mixer.music.play(-1, 0)
 
 running = True
 while running:
@@ -160,6 +160,41 @@ while running:
         boost_level += 25
         if boost_level > STARTING_BOOST_LEVEL:
             boost_level = STARTING_BOOST_LEVEL
+
+
+    # update the HUD
+    points_text = font.render("Burger Points: " + str(burger_points), True, ORANGE)
+    score_text = font.render("Score: " + str(score), True, ORANGE)
+    burgers_eaten_text = font.render("Burgers Eaten: " + str(burgers_eaten), True, ORANGE)
+    lives_text = font.render("Lives: " + str(player_lives), True, ORANGE)
+    boost_text = font.render("Boost: "+str(boost_level), True, PURPLE)
+
+    # check for game over
+    if player_lives == 0:
+        game_over_text = font.render("Final Score: "+str(score), True, ORANGE)
+        display_surface.blit(lives_text, lives_rect)
+        display_surface.blit(game_over_text, game_over_rect)
+        display_surface.blit(continue_text, continue_rect)
+        pygame.display.update()
+
+        # pause the game until the player presses a key
+        pygame.mixer.music.pause()
+        is_paused = True
+        while is_paused:
+            for event in pygame.event.get():
+                # the player wants to play again
+                if event.type == pygame.KEYDOWN:
+                    score = 0
+                    player_lives = PLAYER_STARTING_LIVES
+                    boost_level = STARTING_BOOST_LEVEL
+                    burger_velocity = STARTING_BURGER_VELOCITY
+                    burgers_eaten = 0
+                    pygame.mixer.music.play(-1,0)
+                    is_paused = False
+
+                if event.type == pygame.QUIT:
+                    is_paused = False
+                    running = False
 
 
     # fill the display
