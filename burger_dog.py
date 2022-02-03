@@ -23,6 +23,7 @@ STARTING_BOOST_LEVEL = 100
 STARTING_BURGER_VELOCITY = 3
 BURGER_ACCELERATION = 0.25
 BUFFER_DISTANCE = 100
+STARTING_BURGER_POSITION = (random.randint(0, WINDOW_WIDTH - 32), - BUFFER_DISTANCE)
 
 score = 0
 burger_points = 0
@@ -96,7 +97,7 @@ player_rect.bottom = WINDOW_HEIGHT
 
 burger_image = pygame.image.load("./burger_dog/assets/burger.png")
 burger_rect = burger_image.get_rect()
-burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
+burger_rect.topleft = STARTING_BURGER_POSITION
 
 
 # main game loop
@@ -129,6 +130,20 @@ while running:
         player_velocity = PLAYER_NORMAL_VELOCITY
 
 
+    # move the burger and update burger points
+    burger_rect.y += burger_velocity
+    burger_points = int((WINDOW_HEIGHT - burger_rect.y + 100) * burger_velocity)
+
+    # player missed the burger
+    if burger_rect.y > WINDOW_HEIGHT:
+        player_lives -= 1
+        miss_sound.play()
+
+        burger_rect.topleft = STARTING_BURGER_POSITION
+        burger_velocity = STARTING_BURGER_VELOCITY
+        player_rect.centerx = WINDOW_WIDTH//2
+        player_rect.bottom = WINDOW_HEIGHT
+        boost_level = STARTING_BOOST_LEVEL
 
     
     # fill the display
@@ -141,7 +156,10 @@ while running:
     display_surface.blit(burgers_eaten_text, burgers_eaten_rect)
     display_surface.blit(lives_text, lives_rect)
     display_surface.blit(boost_text, boost_rect)
+
+    # blit assets
     display_surface.blit(player_image, player_rect)
+    display_surface.blit(burger_image, burger_rect)
 
     pygame.draw.line(display_surface, WHITE, (0,100), (WINDOW_WIDTH,100), 2)
 
