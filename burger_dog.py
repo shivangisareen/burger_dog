@@ -23,7 +23,7 @@ STARTING_BOOST_LEVEL = 100
 STARTING_BURGER_VELOCITY = 3
 BURGER_ACCELERATION = 0.25
 BUFFER_DISTANCE = 100
-STARTING_BURGER_POSITION = (random.randint(0, WINDOW_WIDTH - 32), - BUFFER_DISTANCE)
+STARTING_BURGER_POSITION = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
 
 score = 0
 burger_points = 0
@@ -97,10 +97,12 @@ player_rect.bottom = WINDOW_HEIGHT
 
 burger_image = pygame.image.load("./burger_dog/assets/burger.png")
 burger_rect = burger_image.get_rect()
-burger_rect.topleft = STARTING_BURGER_POSITION
+burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
 
 
 # main game loop
+pygame.mixer.music.play()
+
 running = True
 while running:
     # see if user wants to quit
@@ -139,13 +141,27 @@ while running:
         player_lives -= 1
         miss_sound.play()
 
-        burger_rect.topleft = STARTING_BURGER_POSITION
+        burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
         burger_velocity = STARTING_BURGER_VELOCITY
         player_rect.centerx = WINDOW_WIDTH//2
         player_rect.bottom = WINDOW_HEIGHT
         boost_level = STARTING_BOOST_LEVEL
 
     
+    # check for collisions
+    if player_rect.colliderect(burger_rect):
+        score += burger_points
+        burgers_eaten += 1
+        bark_sound.play()
+
+        burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), -BUFFER_DISTANCE)
+        burger_velocity += BURGER_ACCELERATION
+
+        boost_level += 25
+        if boost_level > STARTING_BOOST_LEVEL:
+            boost_level = STARTING_BOOST_LEVEL
+
+
     # fill the display
     display_surface.fill(BLACK)
 
