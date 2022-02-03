@@ -108,6 +108,19 @@ while running:
             running = False
 
     
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player_rect.left > 0:
+        player_rect.x -= player_velocity
+        player_image = player_image_left
+    if keys[pygame.K_RIGHT] and player_rect.right < WINDOW_WIDTH:
+        player_rect.x += player_velocity
+        player_image = player_image_right
+    if keys[pygame.K_UP] and player_rect.top > 100:
+        player_rect.y -= player_velocity
+    if keys[pygame.K_DOWN] and player_rect.bottom < WINDOW_HEIGHT:
+        player_rect.y += player_velocity
+
+    
     # fill the display
     display_surface.fill(BLACK)
 
